@@ -4,19 +4,19 @@ After=docker.service network-online.target
 Requires=docker.service network-online.target
 
 [Service]
-User=mlabbe
-Group=mlabbe
-WorkingDirectory=/home/mlabbe/example.com
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/example.com
 Type=oneshot
 RemainAfterExit=yes
 
-ExecStartPre=/home/mlabbe/dev/venv/bb/bin/docker-compose pull --quiet --parallel
-ExecStart=/home/mlabbe/dev/venv/bb/bin/docker-compose up -d
+ExecStartPre=/home/ubuntu/dev/venv/bb/bin/docker-compose pull --quiet --parallel
+ExecStart=/home/ubuntu/dev/venv/bb/bin/docker-compose up -d
 
-ExecStop=/home/mlabbe/dev/venv/bb/bin/docker-compose down
+ExecStop=/home/ubuntu/dev/venv/bb/bin/docker-compose down
 
-ExecReload=/home/mlabbe/dev/venv/bb/bin/docker-compose pull --quiet --parallel
-ExecReload=/home/mlabbe/dev/venv/bb/bin/docker-compose up -d
+ExecReload=/home/ubuntu/dev/venv/bb/bin/docker-compose pull --quiet --parallel
+ExecReload=/home/ubuntu/dev/venv/bb/bin/docker-compose up -d
 
 [Install]
 WantedBy=multi-user.target
