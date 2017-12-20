@@ -12,8 +12,8 @@ We use docker-compose with Nginx, PostgreSQL and Buildbot Master
 containers to configure multiple Buildbot masters which run
 side-by-side.
                 
-    example.net/buildbot/project1  # buildbot master for proj1
-    example.net/buildbot/project2  # buildbot master for proj2
+    https://example.net/buildbot/project1  # buildbot master for proj1
+    https://example.net/buildbot/project2  # buildbot master for proj2
     
 Note that multi-project Buildbot is different than (but not
 fundamentally incompatible with) Buildbot
