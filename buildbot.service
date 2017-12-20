@@ -1,0 +1,22 @@
+[Unit]
+Description=example.com containers
+After=docker.service network-online.target
+Requires=docker.service network-online.target
+
+[Service]
+User=mlabbe
+Group=mlabbe
+WorkingDirectory=/home/mlabbe/example.com
+Type=oneshot
+RemainAfterExit=yes
+
+ExecStartPre=/home/mlabbe/dev/venv/bb/bin/docker-compose pull --quiet --parallel
+ExecStart=/home/mlabbe/dev/venv/bb/bin/docker-compose up -d
+
+ExecStop=/home/mlabbe/dev/venv/bb/bin/docker-compose down
+
+ExecReload=/home/mlabbe/dev/venv/bb/bin/docker-compose pull --quiet --parallel
+ExecReload=/home/mlabbe/dev/venv/bb/bin/docker-compose up -d
+
+[Install]
+WantedBy=multi-user.target

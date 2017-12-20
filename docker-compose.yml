@@ -1,0 +1,70 @@
+version: '3'
+services:
+  # main net web proxy
+  webproxy:
+    image: nginx
+    restart: on-failure
+    volumes:
+      - ./webproxy/conf:/etc/nginx/:ro
+      - ./ssl/mount:/etc/letsencrypt:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - buildbot_project1
+      - buildbot_project2
+
+  # shared db
+  db:
+    build: postgres
+    env_file:
+      - buildbotcommon.env
+    environment:
+      - POSTGRES_MULTIPLE_DATABASES=project1,project2
+    expose:
+      - 5432
+  
+  # buildbot project1
+  buildbot_project1:
+    image: "buildbot/buildbot-master:v0.9.14"
+    volumes:
+     - ./buildbot/project1:/var/lib/buildbot  # config files
+    env_file:
+      - buildbotcommon.env
+    environment:
+      - POSTGRES_DB=project1      
+      - BUILDBOT_WORKER_PORT=9989
+      - BUILDBOT_WEB_URL=https://www.example.com/buildbot/project1/
+      - BUILDBOT_WEB_PORT=8080
+    links:
+      - db
+    depends_on:
+      - db
+    expose:
+      - "8080"       # web port
+    ports:
+      - "9989:9989"  # buildbot worker connect in here
+
+  # buildbot project2
+  buildbot_project2:
+    image: "buildbot/buildbot-master:v0.9.14"    
+    volumes:
+     - ./buildbot/project2:/var/lib/buildbot  # config files
+    env_file:
+      - buildbotcommon.env      
+    environment:
+      - POSTGRES_DB=project2
+      - BUILDBOT_WORKER_PORT=9989
+      - BUILDBOT_WEB_URL=https://www.example.com/buildbot/project2/
+      - BUILDBOT_WEB_PORT=8080
+    links:
+      - db
+    depends_on:
+      - db
+    expose:
+      - "8080"       # web port
+    ports:
+      - "9990:9989"  # buildbot worker connect in here
+
+
+       

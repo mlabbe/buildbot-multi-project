@@ -1,0 +1,25 @@
+[Unit]
+Description=Buildbot Example Worker
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+
+# delete any existing container before starting and make sure it's downloaded
+# note that this deletes an existing sync inside the container on system restart
+ExecStartPre=/bin/bash -c '/usr/bin/docker rm -f buildbot-example-worker || /bin/true'
+
+# change all of these to suit your configuration
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/example-worker/
+ExecStart=/usr/bin/docker run  \
+         --name "buildbot-example-worker" \
+                           test-worker:test \  # test is the label build.sh builds, you may want to update this
+                           
+ExecStop=/usr/bin/docker stop -t 2 test-worker:test
+
+[Install]
+WantedBy=multi-user.target
+
